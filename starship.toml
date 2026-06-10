@@ -1,0 +1,50 @@
+add_newline = true
+
+format = """
+${custom.clientip}\
+$directory
+$hostname\
+${custom.ssh}\
+${custom.sudo}\
+$status\
+$character\
+"""
+[custom.clientip]
+when = '[[ -n "$SSH_CONNECTION" ]]'
+command = 'printf "%s@%s" "$USER" "$(echo $SSH_CONNECTION | awk "{print \$1}")"'
+format = "[$output ](bold #808080)"
+
+[directory]
+format = "[$path](bold #FFA500) "
+truncation_length = 3
+truncate_to_repo = false
+home_symbol = "~"
+
+[hostname]
+ssh_only = false
+format = "[$hostname ](bold red)"
+trim_at = "."
+disabled = false
+
+[custom.sudo]
+command = "sudo -n true 2>/dev/null && printf '%s' '#'"
+when = "true"
+shell = ["sh"]
+format = "[$output](bold yellow)"
+
+[status]
+disabled = false
+map_symbol = true
+recognize_signal_code = true
+symbol = "✗ "
+format = "[$symbol$status]($style) "
+style = "bold red"
+
+[character]
+success_symbol = "[❯](white bold)"
+error_symbol = "[❯](bold red)"
+
+[cmd_duration]
+min_time = 2000
+format = "[⏱ $duration]($style) "
+style = "yellow"
